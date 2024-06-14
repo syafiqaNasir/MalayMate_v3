@@ -3,9 +3,9 @@ import 'package:malaymate/Model/translation_model.dart';
 import 'package:malaymate/Model/utility_service.dart';
 import 'package:malaymate/View/home_page.dart';
 import 'package:malaymate/View/translatewithvoice_page.dart';
+import 'package:malaymate/View/translatewithcamera_page.dart';
 import 'package:malaymate/View/phrasebook_page.dart';
 
-import '../View/camera_permission.dart';
 
 class HomeController {
   final TranslationModel translationModel;
@@ -19,13 +19,14 @@ class HomeController {
         Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
         break;
       case 1:
-        Navigator.push(context, MaterialPageRoute(builder: (context) => PermissionScreen()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => TranslateWithCameraPage(title: 'Camera Translation',
+        )));
         break;
       case 2:
-        Navigator.push(context, MaterialPageRoute(builder: (context) => VoiceTranslation()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => TranslateWithVoicePage()));
         break;
       case 3:
-        Navigator.push(context, MaterialPageRoute(builder: (context) => Phrasebook()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => PhrasebookScreen()));
         break;
     }
   }

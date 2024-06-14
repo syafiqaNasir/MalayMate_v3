@@ -190,14 +190,16 @@ class _HomePageState extends State<HomePage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(language, style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold)),
+          Text(language, style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold)),
           SizedBox(height: 8),
           TextField(
             maxLines: null,
             decoration: InputDecoration(
               hintText: 'Start typing...',
+              hintStyle: TextStyle(fontSize: 20),
               border: InputBorder.none,
             ),
+            style: TextStyle(fontSize: 20),
             controller: controller,
             focusNode: language == 'English' ? englishFocusNode : null,
           ),
@@ -257,14 +259,16 @@ class _HomePageState extends State<HomePage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(language, style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold)),
+          Text(language, style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold)),
           SizedBox(height: 8),
           TextField(
             maxLines: null,
             decoration: InputDecoration(
               hintText: 'Translated text...',
+              hintStyle: TextStyle(fontSize: 20),
               border: InputBorder.none,
             ),
+            style: TextStyle(fontSize: 20),
             controller: TextEditingController(text: initialText),
             readOnly: true,
           ),

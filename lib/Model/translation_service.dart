@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class TranslationService {
-  final String _baseUrl = 'http://10.131.76.114:7860/api/predict';
+  final String _baseUrl = 'http://10.131.73.241:7860/api/predict';
 
   Future<String> translate(String text, {String toLang = 'English'}) async {
     final response = await http.post(

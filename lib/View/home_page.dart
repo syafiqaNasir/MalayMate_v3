@@ -47,7 +47,7 @@ class _HomePageState extends State<HomePage> {
       backgroundColor: Colors.blue[100],
       body: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: Colors.grey.shade50,
         ),
         child: SafeArea(
           child: Column(
@@ -66,7 +66,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                     IconButton(
-                      icon: Icon(Icons.settings, color: Colors.blueAccent),
+                      icon: Icon(Icons.settings, color: Colors.white),
                       onPressed: () {}, // Placeholder for settings action
                     ),
                   ],
@@ -105,24 +105,58 @@ class _HomePageState extends State<HomePage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      'Choose language: ',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                    ),
-                    DropdownButton<String>(
-                      value: Provider.of<TranslationModel>(context).selectedLanguage,
-                      items: <String>['English to Malay', 'Malay to English'].map((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
-                      onChanged: (String? newValue) {
-                        if (newValue != null) {
-                          Provider.of<TranslationModel>(context, listen: false).setSelectedLanguage(newValue);
-                          _onTextChanged();
-                        }
+                    GestureDetector(
+                      onTap: () {
+                        Provider.of<TranslationModel>(context, listen: false).setSelectedLanguage('English to Malay');
+                        _onTextChanged();
                       },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5.0),
+                          color: Provider.of<TranslationModel>(context).selectedLanguage == 'English to Malay'
+                              ? Colors.blueAccent
+                              : Colors.grey[300],
+                        ),
+                        child: Text(
+                          'English',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Provider.of<TranslationModel>(context).selectedLanguage == 'English to Malay'
+                                ? Colors.white
+                                : Colors.black,
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 10.0),
+                    Icon(Icons.swap_horiz),
+                    SizedBox(width: 10.0),
+                    GestureDetector(
+                      onTap: () {
+                        Provider.of<TranslationModel>(context, listen: false).setSelectedLanguage('Malay to English');
+                        _onTextChanged();
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5.0),
+                          color: Provider.of<TranslationModel>(context).selectedLanguage == 'Malay to English'
+                              ? Colors.blueAccent
+                              : Colors.grey[300],
+                        ),
+                        child: Text(
+                          'Malay',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Provider.of<TranslationModel>(context).selectedLanguage == 'Malay to English'
+                                ? Colors.white
+                                : Colors.black,
+                          ),
+                        ),
+                      ),
                     ),
                   ],
                 ),

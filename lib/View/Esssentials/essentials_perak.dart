@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:malaymate/Controller/home_controller.dart';
 
-class Essentials extends StatelessWidget {
+class PerakEssentials extends StatelessWidget {
   final HomeController homeController;
 
-  Essentials({required this.homeController});
+  PerakEssentials({required this.homeController});
 
   final List<Map<String, dynamic>> phrases = [
     {
@@ -26,19 +26,85 @@ class Essentials extends StatelessWidget {
         'Thank you.',
       ],
     },
+    {
+      'category': 'DIRECTIONS',
+      'phrases': [
+        'Left',
+        'Right',
+        'Straight ahead',
+        'In ___ meters.',
+        'Traffic light',
+        'Stop sign',
+        'North',
+        'South',
+        'East',
+        'West',
+      ],
+    },
+    {
+      'category': 'MONEY',
+      'phrases': [
+        'Where is the ATM?',
+        'I want to exchange money.',
+        'What is the exchange fee?',
+        'How much does it cost?',
+      ],
+    },
+    {
+      'category': 'GENERAL',
+      'phrases': [
+        'Where is the toilet?',
+        'Where is the grocery store?',
+        'This is an emergency!',
+        'I need help.',
+      ],
+    },
+    {
+      'category': 'LANGUAGE',
+      'phrases': [
+        'Do you speak ___?',
+        'I don\'t speak ___.',
+        'I don\'t understand.',
+        'I speak ___.',
+      ],
+    },
   ];
 
   final Map<String, String> translations = {
     'Hello': 'Halo',
-    'My name is ': 'Nama saya',
-    'Excuse me': 'Maafkan saya',
+    'My name is ': 'Nama saya ',
+    'Excuse me': 'Tumpang lalu',
     'Goodbye': 'Selamat tinggal',
     'How are you?': 'Apa khabar?',
-    'Nice to meet you!': 'Senang bertemu dengan anda!',
+    'Nice to meet you!': 'Seronok jumpa dengan awak!',
     'Please': 'Tolong',
     'I\'m sorry.': 'Saya minta maaf.',
     'Thank you.': 'Terima kasih.',
+    'Left': 'Kiri',
+    'Right': 'Kanan',
+    'Straight ahead': 'Jalan terus',
+    'In ___ meters.': 'Dalam ___ meter.',
+    'Traffic light': 'Lampu isyarat',
+    'Stop sign': 'Tanda berhenti',
+    'North': 'Utara',
+    'South': 'Selatan',
+    'East': 'Timur',
+    'West': 'Barat',
+    'Where is the ATM?': 'Kat mana ATM?',
+    'I want to exchange money.': 'Saya nak tukar duit.',
+    'What is the exchange fee?': 'Berapa yuran tukar duit?',
+    'How much does it cost?': 'Berapa harganya?',
+    'Where is the toilet?': 'Kat mana tandas?',
+    'Where is the grocery store?': 'Kat mana kedai runcit?',
+    'This is an emergency!': 'Ini kecemasan!',
+    'I need help.': 'Saya perlu bantuan.',
+    'Do you speak ___?': 'Awak cakap ___?',
+    'I don\'t speak ___.': 'Saya tak cakap ___.',
+    'I don\'t understand.': 'Saya tak faham.',
+    'I speak ___.': 'Saya cakap ___.',
   };
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -84,8 +150,8 @@ class CategorySection extends StatelessWidget {
           children: [
             Text(translation,
               style: TextStyle(fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: Colors.blue
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blue
               ),
             ),
             Row(

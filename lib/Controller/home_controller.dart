@@ -19,11 +19,10 @@ class HomeController {
         Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
         break;
       case 1:
-        Navigator.push(context, MaterialPageRoute(builder: (context) => TranslateWithCameraPage(title: 'Camera Translation',
-        )));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => TranslateWithCameraPage(homeController: this,)));
         break;
       case 2:
-        Navigator.push(context, MaterialPageRoute(builder: (context) => TranslateWithVoicePage()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => TranslateWithVoicePage(homeController: this)));
         break;
       case 3:
         Navigator.push(context, MaterialPageRoute(builder: (context) => PhrasebookScreen()));

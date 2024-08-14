@@ -16,6 +16,7 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) => TranslationModel(),
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'Bilingual Malay-English Apps',
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),

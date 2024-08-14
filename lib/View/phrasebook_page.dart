@@ -3,8 +3,18 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:malaymate/Controller/phrasebook_controller.dart';
 import 'package:malaymate/Controller/home_controller.dart';
 import 'package:malaymate/Model/translation_model.dart';
-import 'package:malaymate/View/essentials.dart';
-import 'package:malaymate/View/essentials_kel.dart';
+import 'package:malaymate/View/Esssentials/essentials.dart';
+import 'package:malaymate/View/Esssentials/essentials_ganu.dart';
+import 'package:malaymate/View/Esssentials/essentials_kel.dart';
+import 'package:malaymate/View/Esssentials/essentials_negeri.dart';
+import 'package:malaymate/View/Esssentials/essentials_pahang.dart';
+import 'package:malaymate/View/Esssentials/essentials_perak.dart';
+import 'package:malaymate/View/Esssentials/essentials_sabah.dart';
+
+import 'Esssentials/essentials_johor.dart';
+import 'Esssentials/essentials_kedah.dart';
+import 'Esssentials/essentials_melaka.dart';
+import 'Esssentials/essentials_sarawak.dart';
 
 class PhrasebookScreen extends StatefulWidget {
   const PhrasebookScreen({Key? key}) : super(key: key);
@@ -103,7 +113,8 @@ class _PhrasebookScreenState extends State<PhrasebookScreen> {
                 selectedAccent = newValue!;
               });
             },
-            items: <String>['Standard Malay', 'Kelantan']
+            items: <String>['Standard Malay', 'Kelantan', 'Terengganu', 'Johor', 'Kedah', 'Melaka',
+              'Negeri', 'Pahang', 'Perak', 'Sabah', 'Sarawak' ]
                 .map<DropdownMenuItem<String>>((String value) {
               return DropdownMenuItem<String>(
                 value: value,
@@ -139,6 +150,78 @@ class _PhrasebookScreenState extends State<PhrasebookScreen> {
         context,
         MaterialPageRoute(
           builder: (context) => EssentialsKelantan(homeController: homeController),
+        ),
+      );
+    }
+    else if (selectedAccent == 'Terengganu') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => TerengganuEssentials(homeController: homeController),
+        ),
+      );
+    }
+    else if (selectedAccent == 'Johor') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => JohorEssentials(homeController: homeController),
+        ),
+      );
+    }
+    else if (selectedAccent == 'Kedah') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => KedahEssentials(homeController: homeController),
+        ),
+      );
+    }
+    else if (selectedAccent == 'Melaka') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => MelakaEssentials(homeController: homeController),
+        ),
+      );
+    }
+    else if (selectedAccent == 'Negeri') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => NegeriEssentials(homeController: homeController),
+        ),
+      );
+    }
+    else if (selectedAccent == 'Pahang') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => PahangEssentials(homeController: homeController),
+        ),
+      );
+    }
+    else if (selectedAccent == 'Perak') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => PerakEssentials(homeController: homeController),
+        ),
+      );
+    }
+    else if (selectedAccent == 'Sabah') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => SabahEssentials(homeController: homeController),
+        ),
+      );
+    }
+    else if (selectedAccent == 'Sarawak') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => SarawakEssentials(homeController: homeController),
         ),
       );
     }

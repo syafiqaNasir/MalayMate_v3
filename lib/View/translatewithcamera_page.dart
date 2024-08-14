@@ -1,16 +1,18 @@
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:malaymate/Controller/image_controller.dart';
+import 'package:malaymate/Controller/home_controller.dart';
 import 'package:dotted_border/dotted_border.dart';
 
 class TranslateWithCameraPage extends StatefulWidget {
-  final String title;
+  final HomeController homeController;
 
   const TranslateWithCameraPage({
-    Key? key,
-    required this.title,
-  }) : super(key: key);
+    super.key,
+    required this.homeController,
+  });
 
   @override
   _TranslateWithCameraPageState createState() => _TranslateWithCameraPageState();
@@ -21,14 +23,38 @@ class _TranslateWithCameraPageState extends State<TranslateWithCameraPage> {
 
   @override
   Widget build(BuildContext context) {
+    _controller.setContext(context);  // Pass context to controller
     return Scaffold(
-      appBar: AppBar(title: Text(widget.title)),
+      appBar: AppBar(
+        title: Text(
+          'Camera Translation',
+          style: GoogleFonts.poppins(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: Colors.blueAccent,
+          ),
+        ),
+        backgroundColor: Colors.white,
+      ),
       body: Column(
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(child: _body()),
         ],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.blue.shade500,
+        selectedItemColor: Colors.white,
+        unselectedItemColor: Colors.white,
+        onTap: (index) => widget.homeController.onTabTapped(index, context),
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
+          BottomNavigationBarItem(icon: Icon(Icons.camera_alt), label: "Camera"),
+          BottomNavigationBarItem(icon: Icon(Icons.mic), label: "Voice"),
+          BottomNavigationBarItem(icon: Icon(Icons.bookmark), label: "Phrasebook"),
+        ],
+        type: BottomNavigationBarType.fixed,
       ),
     );
   }
@@ -47,81 +73,171 @@ class _TranslateWithCameraPageState extends State<TranslateWithCameraPage> {
   }
 
   Widget _imageCard() {
-    return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Card(
-              elevation: 4.0,
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: _image(),
+    return SingleChildScrollView(
+      child: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const SizedBox(height: 20),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: SizedBox(
+                height: 440,
+                child: Card(
+                  elevation: 4.0,
+                  color: Colors.blue.shade100,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: _image(),
+                  ),
+                ),
+              ),
+            ),
+            _translatedTextCard(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _translatedTextCard() {
+    return ValueListenableBuilder(
+      valueListenable: _controller.translatedResultNotifier,
+      builder: (context, translatedResult, child) {
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Container(
+            margin: const EdgeInsets.symmetric(vertical: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            height: 200,
+            width: 360,
+            decoration: BoxDecoration(
+              color: Colors.blue.shade100,
+              borderRadius: BorderRadius.circular(8),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.3),
+                  spreadRadius: 1,
+                  blurRadius: 5,
+                  offset: const Offset(0, 3),
+                ),
+              ],
+            ),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        _controller.toLanguage,
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      _languageButton(),
+                    ],
+                  ),
+                  const SizedBox(height: 24),
+                  TextField(
+                    controller: TextEditingController(text: translatedResult.isNotEmpty ? translatedResult : null),
+                    decoration: const InputDecoration(
+                      hintText: 'Translated text will appear here...',
+                      border: InputBorder.none,
+                    ),
+                    style: const TextStyle(fontSize: 20, color: Colors.black),
+                    readOnly: true,
+                    maxLines: null, // Allows the text field to grow if the text is multiline
+                  ),
+                ],
               ),
             ),
           ),
-          const SizedBox(height: 24.0),
-          _menu(),
-          const SizedBox(height: 20),
-          _languageSelection(),
-          const SizedBox(height: 20),
-          ElevatedButton(
-              onPressed: () async {
-                await _controller.performOCR();
-                _controller.translateText();
-              },
-              child: const Text('Translate Image')
-          ),
-          const SizedBox(height: 20),
-          const Text('Translated Text:'),
-          ValueListenableBuilder(
-            valueListenable: _controller.translatedResultNotifier,
-            builder: (context, translatedResult, child) {
-              return Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(translatedResult),
-              );
-            },
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 
-  Widget _languageSelection() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        _languageButton(_controller.fromLanguage),
-        IconButton(
-          icon: Icon(Icons.swap_horiz),
-          onPressed: () {
+  Widget _languageButton() {
+    List<String> languageOptions = [
+      'English to Malay',
+      'Malay to English',
+    ];
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+      child: DropdownButton<String>(
+        value: '${_controller.fromLanguage} to ${_controller.toLanguage}',
+        items: languageOptions.map((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Text(value),
+          );
+        }).toList(),
+        onChanged: (String? newValue) {
+          if (newValue != null) {
             setState(() {
-              _controller.swapLanguages();
+              switch (newValue) {
+                case 'English to Malay':
+                  _controller.fromLanguage = 'English';
+                  _controller.toLanguage = 'Malay';
+                  break;
+                case 'Malay to English':
+                  _controller.fromLanguage = 'Malay';
+                  _controller.toLanguage = 'English';
+                  break;
+                default:
+                  break;
+              }
             });
-          },
-        ),
-        _languageButton(_controller.toLanguage),
-      ],
+          }
+        },
+      ),
     );
   }
 
-  Widget _languageButton(String language) {
+  Widget _menu() {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.grey.shade300),
-      ),
-      child: Text(
-        language,
-        style: TextStyle(
-          fontSize: 16,
-          color: Colors.black,
-        ),
+      padding: const EdgeInsets.only(bottom: 17),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          FloatingActionButton(
+            onPressed: () async {
+              await _controller.captureImage();
+            },
+            backgroundColor: Colors.blue.shade200,
+            tooltip: 'Scan Here',
+            child: const Icon(Icons.camera_alt_outlined),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 10.0),
+            child: FloatingActionButton(
+              onPressed: () async {
+                await _controller.uploadImage();
+              },
+              backgroundColor: Colors.blue.shade200,
+              tooltip: 'Upload Here',
+              child: const Icon(Icons.image),
+            ),
+          ),
+          if (_controller.imageNotifier.value != null)
+            Padding(
+              padding: const EdgeInsets.only(left: 20.0),
+              child: FloatingActionButton(
+                onPressed: () async {
+                  await _controller.cropImage();
+                },
+                backgroundColor: Colors.blue.shade200,
+                tooltip: 'Crop',
+                child: const Icon(Icons.crop),
+              ),
+            ),
+        ],
       ),
     );
   }
@@ -131,97 +247,115 @@ class _TranslateWithCameraPageState extends State<TranslateWithCameraPage> {
     final screenHeight = MediaQuery.of(context).size.height;
     final imagePath = _controller.imageNotifier.value?.path;
     if (imagePath != null) {
-      return ConstrainedBox(
-        constraints: BoxConstraints(
-          maxWidth: 0.8 * screenWidth,
-          maxHeight: 0.7 * screenHeight,
+      return Container(
+        color: Colors.transparent,
+        padding: const EdgeInsets.only(top: 5),
+        child: Column(
+          children: [
+            Container(
+              child: Row(
+                children: [
+                  _menu(),
+                ],
+              ),
+            ),
+            SingleChildScrollView(
+              child: Container(
+                height: 250,
+                width: 400,
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxWidth: 0.8 * screenWidth,
+                    maxHeight: 0.7 * screenHeight,
+                  ),
+                  child: kIsWeb ? Image.network(imagePath) : Image.file(File(imagePath)),
+                ),
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.only(top: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  OutlinedButton(
+                    onPressed: _controller.clear,
+                    child: Text(
+                      'Clear',
+                      style: TextStyle(color: Colors.black87),
+                    ),
+                    style: OutlinedButton.styleFrom(
+                      backgroundColor: Colors.blue.shade200,
+                      side: BorderSide(color: Colors.black87, width: 1),
+                    ),
+                  ),
+                  OutlinedButton(
+                    onPressed: () async {
+                      await _controller.performOCR();
+                      await _controller.translateText();
+                    },
+                    child: Text(
+                      'Translate',
+                      style: TextStyle(color: Colors.black87),
+                    ),
+                    style: OutlinedButton.styleFrom(
+                      backgroundColor: Colors.blue.shade200,
+                      side: BorderSide(color: Colors.black87, width: 1),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
-        child: kIsWeb ? Image.network(imagePath) : Image.file(File(imagePath)),
       );
     } else {
       return const SizedBox.shrink();
     }
   }
 
-  Widget _menu() {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        FloatingActionButton(
-          onPressed: _controller.clear,
-          backgroundColor: Colors.redAccent,
-          tooltip: 'Delete',
-          child: const Icon(Icons.delete),
-        ),
-        if (_controller.imageNotifier.value != null)
-          Padding(
-            padding: const EdgeInsets.only(left: 32.0),
-            child: FloatingActionButton(
-              onPressed: _controller.cropImage,
-              backgroundColor: Colors.blue,
-              tooltip: 'Crop',
-              child: const Icon(Icons.crop),
-            ),
-          )
-      ],
-    );
-  }
-
   Widget _uploaderCard() {
     return Center(
-      child: Card(
-        elevation: 4.0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16.0),
-        ),
-        child: SizedBox(
-          width: 320.0,
-          height: 300.0,
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: DottedBorder(
-                    radius: const Radius.circular(12.0),
-                    borderType: BorderType.RRect,
-                    dashPattern: const [8, 4],
-                    color: Colors.blue.withOpacity(0.4),
-                    child: Center(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.image,
-                            color: Colors.blue,
-                            size: 80.0,
+      child: SingleChildScrollView(
+        child: Card(
+          elevation: 4.0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16.0),
+          ),
+          child: SizedBox(
+            width: 320.0,
+            height: 300.0,
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: DottedBorder(
+                      radius: const Radius.circular(12.0),
+                      borderType: BorderType.RRect,
+                      dashPattern: const [8, 4],
+                      color: Colors.grey,
+                      child: Center(
+                        child: Text(
+                          "Take a photo to start...",
+                          style: GoogleFonts.poppins(
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.w500,
                           ),
-                          const SizedBox(height: 24.0),
-                          Text(
-                            'Please upload an image',
-                            style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                              color: Colors.blue,
-                            ),
-                          )
-                        ],
+                          textAlign: TextAlign.center,
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 24.0),
-                child: ElevatedButton(
-                  onPressed: _controller.uploadImage,
-                  style: ElevatedButton.styleFrom(foregroundColor: Colors.blue),
-                  child: const Text('Upload'),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 16.0),
+                  child: _menu(),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

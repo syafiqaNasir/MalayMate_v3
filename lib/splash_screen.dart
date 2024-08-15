@@ -21,7 +21,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   void initState() {
     super.initState();
     _animationController = AnimationController(
-      duration: const Duration(milliseconds: 3000),
+      duration: const Duration(milliseconds: 1800),
       vsync: this,
     );
     _animation = Tween<double>(begin: 0, end: 1).animate(_animationController)
@@ -46,6 +46,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey.shade100,
       body: AnimatedBuilder(
         animation: _animationController,
         builder: (BuildContext context, Widget? child) {

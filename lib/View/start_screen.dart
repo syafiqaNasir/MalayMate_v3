@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
 
-import 'home_page.dart';
+import 'translatewithtext_page.dart';
 
 class StartScreen extends StatefulWidget {
   const StartScreen({super.key});
@@ -54,15 +55,17 @@ class _StartScreenState extends State<StartScreen> {
               padding: const EdgeInsets.all(20.0),
               child: Column(
                 children: [
-                  Image.asset(
-                    'assets/images/smiley.png',
-                    width: 300,
-                    height: 200,
-                    fit: BoxFit.cover,
-                  ),
+                  Lottie.asset("assets/lottie/walking_man.json",
+                      height: 200),
+                  // Image.asset(
+                  //   'assets/images/smiley.png',
+                  //   width: 300,
+                  //   height: 200,
+                  //   fit: BoxFit.cover,
+                  // ),
                   SizedBox(height: 60,),
                   Text(
-                    'Iam here to help you speak\nMalaysian, Anywhere, Anytime.',
+                    'I am here to help you explore\n Malaysia, Anywhere, Anytime.',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 16,
@@ -84,7 +87,7 @@ class _StartScreenState extends State<StartScreen> {
                     ),
                     child: ElevatedButton(onPressed: () {
                       Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => HomePage()),
+                          MaterialPageRoute(builder: (context) => TranslateWithTextPage()),
                       );
                     },
                       style: ElevatedButton.styleFrom(

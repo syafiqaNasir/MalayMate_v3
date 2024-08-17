@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:malaymate/Controller/speech_to_text_controller.dart';
-import 'package:malaymate/Controller/home_controller.dart';
+import 'package:malaymate/Controller/translatewithtext_controller.dart';
 
 class TranslateWithVoicePage extends StatefulWidget {
   const TranslateWithVoicePage({Key? key, required this.homeController}) : super(key: key);
@@ -21,14 +21,18 @@ class _TranslateWithVoicePageState extends State<TranslateWithVoicePage> {
       create: (_) => SpeechToTextController(),
       child: Scaffold(
         appBar: AppBar(
-          title: Text(
-            'Voice Translation',
-            style: GoogleFonts.poppins(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: Colors.blueAccent,
+          title: Center(
+            child: Text(
+              'Voice Translation',
+              style: GoogleFonts.poppins(
+                fontSize: 32,
+                fontWeight: FontWeight.bold,
+                color: Colors.blueAccent,
+              ),
             ),
           ),
+          backgroundColor: Colors.grey.shade50,
+          automaticallyImplyLeading: false,
         ),
         body: Padding(
             padding: const EdgeInsets.all(12.0),
@@ -151,12 +155,47 @@ class _TranslateWithVoicePageState extends State<TranslateWithVoicePage> {
           unselectedItemColor: Colors.white,
           onTap: (index) => widget.homeController.onTabTapped(index, context),
           items: [
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-            BottomNavigationBarItem(icon: Icon(Icons.camera_alt), label: "Camera"),
-            BottomNavigationBarItem(icon: Icon(Icons.mic), label: "Voice"),
-            BottomNavigationBarItem(icon: Icon(Icons.bookmark), label: "Phrasebook"),
+            BottomNavigationBarItem(
+              icon: Padding(
+                padding: const EdgeInsets.only(bottom: 8.0), // Adjust padding
+                child: Icon(Icons.home, size: 30), // Increase icon size
+              ),
+              label: "Home",
+            ),
+            BottomNavigationBarItem(
+              icon: Padding(
+                padding: const EdgeInsets.only(bottom: 8.0),
+                child: Icon(Icons.sticky_note_2_sharp, size: 30),
+              ),
+              label: "Text",
+            ),
+            BottomNavigationBarItem(
+              icon: Padding(
+                padding: const EdgeInsets.only(bottom: 8.0),
+                child: Icon(Icons.camera_alt, size: 30),
+              ),
+              label: "Camera",
+            ),
+            BottomNavigationBarItem(
+              icon: Padding(
+                padding: const EdgeInsets.only(bottom: 8.0),
+                child: Icon(Icons.mic, size: 30),
+              ),
+              label: "Voice",
+            ),
+            BottomNavigationBarItem(
+              icon: Padding(
+                padding: const EdgeInsets.only(bottom: 8.0),
+                child: Icon(Icons.bookmark, size: 30),
+              ),
+              label: "Phrasebook",
+            ),
           ],
           type: BottomNavigationBarType.fixed,
+          iconSize: 30.0, // Set a default icon size
+          selectedFontSize: 14.0, // Customize text size
+          unselectedFontSize: 12.0,
+          elevation: 10, // Add elevation for a raised effect
         ),
       ),
     );

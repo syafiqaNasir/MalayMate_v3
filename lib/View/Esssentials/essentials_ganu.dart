@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:malaymate/Controller/home_controller.dart';
+import 'package:malaymate/Controller/translatewithtext_controller.dart';
 
 class TerengganuEssentials extends StatelessWidget {
   final HomeController homeController;

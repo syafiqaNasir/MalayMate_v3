@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:malaymate/Controller/image_controller.dart';
-import 'package:malaymate/Controller/home_controller.dart';
+import 'package:malaymate/Controller/translatewithtext_controller.dart';
 import 'package:dotted_border/dotted_border.dart';
 
 class TranslateWithCameraPage extends StatefulWidget {
@@ -26,15 +26,18 @@ class _TranslateWithCameraPageState extends State<TranslateWithCameraPage> {
     _controller.setContext(context);  // Pass context to controller
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Camera Translation',
-          style: GoogleFonts.poppins(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-            color: Colors.blueAccent,
+        title: Center(
+          child: Text(
+            'Camera Translation',
+            style: GoogleFonts.poppins(
+              fontSize: 32,
+              fontWeight: FontWeight.bold,
+              color: Colors.blueAccent,
+            ),
           ),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.grey.shade50,
+        automaticallyImplyLeading: false,
       ),
       body: Column(
         mainAxisSize: MainAxisSize.max,
@@ -48,13 +51,48 @@ class _TranslateWithCameraPageState extends State<TranslateWithCameraPage> {
         selectedItemColor: Colors.white,
         unselectedItemColor: Colors.white,
         onTap: (index) => widget.homeController.onTabTapped(index, context),
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-          BottomNavigationBarItem(icon: Icon(Icons.camera_alt), label: "Camera"),
-          BottomNavigationBarItem(icon: Icon(Icons.mic), label: "Voice"),
-          BottomNavigationBarItem(icon: Icon(Icons.bookmark), label: "Phrasebook"),
+        items: [
+          BottomNavigationBarItem(
+            icon: Padding(
+              padding: const EdgeInsets.only(bottom: 8.0), // Adjust padding
+              child: Icon(Icons.home, size: 30), // Increase icon size
+            ),
+            label: "Home",
+          ),
+          BottomNavigationBarItem(
+            icon: Padding(
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: Icon(Icons.sticky_note_2_sharp, size: 30),
+            ),
+            label: "Text",
+          ),
+          BottomNavigationBarItem(
+            icon: Padding(
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: Icon(Icons.camera_alt, size: 30),
+            ),
+            label: "Camera",
+          ),
+          BottomNavigationBarItem(
+            icon: Padding(
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: Icon(Icons.mic, size: 30),
+            ),
+            label: "Voice",
+          ),
+          BottomNavigationBarItem(
+            icon: Padding(
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: Icon(Icons.bookmark, size: 30),
+            ),
+            label: "Phrasebook",
+          ),
         ],
         type: BottomNavigationBarType.fixed,
+        iconSize: 30.0, // Set a default icon size
+        selectedFontSize: 14.0, // Customize text size
+        unselectedFontSize: 12.0,
+        elevation: 10, // Add elevation for a raised effect
       ),
     );
   }

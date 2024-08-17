@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:malaymate/Model/translation_model.dart';
 import 'package:malaymate/Model/utility_service.dart';
 import 'package:malaymate/View/home_page.dart';
+import 'package:malaymate/View/translatewithtext_page.dart';
 import 'package:malaymate/View/translatewithvoice_page.dart';
 import 'package:malaymate/View/translatewithcamera_page.dart';
 import 'package:malaymate/View/phrasebook_page.dart';
@@ -16,15 +17,18 @@ class HomeController {
   void onTabTapped(int index, BuildContext context) {
     switch (index) {
       case 0:
-        Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => MainPage()));
         break;
       case 1:
-        Navigator.push(context, MaterialPageRoute(builder: (context) => TranslateWithCameraPage(homeController: this,)));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => TranslateWithTextPage()));
         break;
       case 2:
-        Navigator.push(context, MaterialPageRoute(builder: (context) => TranslateWithVoicePage(homeController: this)));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => TranslateWithCameraPage(homeController: this,)));
         break;
       case 3:
+        Navigator.push(context, MaterialPageRoute(builder: (context) => TranslateWithVoicePage(homeController: this)));
+        break;
+      case 4:
         Navigator.push(context, MaterialPageRoute(builder: (context) => PhrasebookScreen()));
         break;
     }

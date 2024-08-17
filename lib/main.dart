@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:malaymate/splash_screen.dart';
+import 'package:malaymate/View/splash_screen.dart';
 import 'package:malaymate/Model/translation_model.dart';
 void main() {
   runApp(const MyApp());

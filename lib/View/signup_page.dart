@@ -1,19 +1,7 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-
-void main() {
-  runApp(SignUpApp());
-}
-
-class SignUpApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: SignUpScreen(),
-    );
-  }
-}
+import 'package:malaymate/View/login_page.dart';
 
 class SignUpScreen extends StatefulWidget {
   @override
@@ -22,15 +10,85 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _reconfirmPasswordController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
+
   bool _isEmailValid = true;
   bool _isTermsAccepted = false;
   bool _isPasswordVisible = false;
   bool _isRSPasswordVisible = false;
 
-  //function to valid emial format
-  bool _validatEmail(String email) {
-    final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+$');
-    return emailRegex.hasMatch(email);
+  // Function to validate email format, including exact domain and TLD validation
+  bool _validateEmail(String email) {
+    // Basic regex to validate the general email structure
+    final emailRegex = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
+
+    // Ensure the basic structure is correct
+    if (!emailRegex.hasMatch(email)) {
+      return false;
+    }
+
+    // Extract the domain part of the email
+    String domain = email.split('@').last.toLowerCase();
+
+    // List of allowed domains and TLDs
+    final allowedDomains = {
+      'gmail.com',
+      'outlook.com',
+      'hotmail.com',
+      'live.com',
+      'yahoo.com',
+      'icloud.com',
+      'me.com',
+      'mac.com',
+      'aol.com',
+      'protonmail.com',
+      'zoho.com',
+      'mail.com',
+      'yandex.com',
+      'gmx.com',
+      'gmx.net',
+    };
+
+    // Check if the extracted domain is in the allowed domains list
+    return allowedDomains.contains(domain);
+  }
+
+  //Function to show a message using a SnackBar
+  void _showSnackBar(String message, {Color backgroundColor = Colors.red}) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message),
+      backgroundColor: backgroundColor,
+      duration: Duration(seconds: 2),
+      ),
+    );
+  }
+
+  //function to triggered the button create account
+  void _oncreateAccountPressed() {
+    // Check if any field is empty
+    if (_usernameController.text.isEmpty ||
+        _emailController.text.isEmpty ||
+        _passwordController.text.isEmpty ||
+        _reconfirmPasswordController.text.isEmpty) {
+      _showSnackBar('Some fields are missing.\nPlease complete all required fields.');
+      return;
+    }
+
+    //Validate email
+    if(!_validateEmail(_emailController.text)) {
+      _showSnackBar('Email is not valid');
+      return;
+    }
+
+    //Validate password
+    if (_passwordController.text != _reconfirmPasswordController.text) {
+      _showSnackBar('Password did not match');
+      return;
+    }
+      // Proceed with account creation logic
+      _showSnackBar('Account created successfully', backgroundColor: Colors.green);
   }
 
   @override
@@ -39,7 +97,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     //Listen for change in the emails text field
     _emailController.addListener(() {
       setState(() {
-        _isEmailValid = _validatEmail(_emailController.text);
+        _isEmailValid = _validateEmail(_emailController.text);
       });
     });
   }
@@ -47,6 +105,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   void dispose() {
     _emailController.dispose();
+    _passwordController.dispose();
+    _reconfirmPasswordController.dispose();
     super.dispose();
   }
 
@@ -102,9 +162,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   SizedBox(height: 24),
                   // Full Name Input
                   TextField(
+                    controller: _usernameController,
                     cursorColor: Colors.blue.shade800,
                     decoration: InputDecoration(
-                      labelText: 'Full Name',
+                      labelText: 'Username',
                       labelStyle:const TextStyle(
                         color: Color(0xFF333333),
                       ),
@@ -166,6 +227,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   SizedBox(height: 20),
                   // Password Input
                   TextField(
+                    controller: _passwordController,
                     obscureText: !_isPasswordVisible,
                     cursorColor: Colors.blue.shade800,
                     decoration: InputDecoration(
@@ -199,6 +261,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   SizedBox(height: 20),
                   // Password Input
                   TextField(
+                    controller: _reconfirmPasswordController,
                     obscureText: !_isRSPasswordVisible,
                     cursorColor: Colors.blue.shade800,
                     decoration: InputDecoration(
@@ -277,7 +340,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                       minimumSize: Size(double.infinity, 50),
                     ),
-                    onPressed: _isTermsAccepted ? () {} : null, // Disable button if terms are not accepted
+                    //ternary operator meaning (?:) (if-else)
+                    onPressed: _isTermsAccepted ? _oncreateAccountPressed : null, // Disable button if terms are not accepted
                     child: Text('Create Account'),
                   ),
                   SizedBox(height: 15),
@@ -292,6 +356,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         TextSpan(
                           text: 'Sign in',
                           style: TextStyle(color: Colors.blue.shade800),
+                          recognizer: TapGestureRecognizer()
+                          //onTap should be a function assignment, not a method call.
+                            ..onTap = () {
+                            Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => LoginScreen()),
+                            );
+                        },
                         ),
                       ],
                     ),

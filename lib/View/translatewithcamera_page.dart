@@ -52,13 +52,13 @@ class _TranslateWithCameraPageState extends State<TranslateWithCameraPage> {
         unselectedItemColor: Colors.white,
         onTap: (index) => widget.homeController.onTabTapped(index, context),
         items: [
-          BottomNavigationBarItem(
-            icon: Padding(
-              padding: const EdgeInsets.only(bottom: 8.0), // Adjust padding
-              child: Icon(Icons.home, size: 30), // Increase icon size
-            ),
-            label: "Home",
-          ),
+          // BottomNavigationBarItem(
+          //   icon: Padding(
+          //     padding: const EdgeInsets.only(bottom: 8.0), // Adjust padding
+          //     child: Icon(Icons.home, size: 30), // Increase icon size
+          //   ),
+          //   label: "Home",
+          // ),
           BottomNavigationBarItem(
             icon: Padding(
               padding: const EdgeInsets.only(bottom: 8.0),
@@ -132,14 +132,14 @@ class _TranslateWithCameraPageState extends State<TranslateWithCameraPage> {
                 ),
               ),
             ),
-            _translatedTextCard(),
+            _translatedTextCard(widget.homeController),
           ],
         ),
       ),
     );
   }
 
-  Widget _translatedTextCard() {
+  Widget _translatedTextCard(HomeController homeController) {
     return ValueListenableBuilder(
       valueListenable: _controller.translatedResultNotifier,
       builder: (context, translatedResult, child) {
@@ -190,6 +190,32 @@ class _TranslateWithCameraPageState extends State<TranslateWithCameraPage> {
                     style: const TextStyle(fontSize: 20, color: Colors.black),
                     readOnly: true,
                     maxLines: null, // Allows the text field to grow if the text is multiline
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.volume_up, color: Colors.black),
+                        onPressed: () {
+                          if (translatedResult.isNotEmpty) homeController.speakText(translatedResult);
+                        },
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.copy, color: Colors.black),
+                        onPressed: () {
+                          if (translatedResult.isNotEmpty) {
+                            homeController.copyText(translatedResult);
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Copied to clipboard")));
+                          }
+                        },
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.share, color: Colors.black),
+                        onPressed: () {
+                          if (translatedResult.isNotEmpty) homeController.shareText(translatedResult);
+                        },
+                      ),
+                    ],
                   ),
                 ],
               ),

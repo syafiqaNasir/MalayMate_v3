@@ -80,7 +80,7 @@ class ImageController {
   }
 
   Future<void> performOCR() async {
-    var url = Uri.parse('http://192.168.163.156:5000/ocr');
+    var url = Uri.parse('http://192.168.43.156:5000/ocr');
     final imageFile = imageNotifier.value;
     if (imageFile == null) return;
 
@@ -110,19 +110,46 @@ class ImageController {
     }
   }
 
+  // Future<void> translateText() async {
+  //   if (ocrResultNotifier.value.isNotEmpty) {
+  //     try {
+  //       String translatedText = await _translationService.translate(
+  //         ocrResultNotifier.value,
+  //         toLang: toLanguage,
+  //       );
+  //       translatedResultNotifier.value = translatedText;
+  //     } catch (e, stackTrace) {
+  //       // Handle translation error
+  //       logError('Error translating text', e, stackTrace);
+  //       _showErrorDialog('Failed to translate text. Please try again.');
+  //     }
+  //   }
+  // }
+
   Future<void> translateText() async {
     if (ocrResultNotifier.value.isNotEmpty) {
       try {
+        String toLangCode = _getLanguageCode(toLanguage);
         String translatedText = await _translationService.translate(
           ocrResultNotifier.value,
-          toLang: toLanguage,
+          toLang: toLangCode,
         );
         translatedResultNotifier.value = translatedText;
       } catch (e, stackTrace) {
-        // Handle translation error
         logError('Error translating text', e, stackTrace);
         _showErrorDialog('Failed to translate text. Please try again.');
       }
+    }
+  }
+
+  String _getLanguageCode(String language) {
+    switch (language) {
+      case 'English':
+        return 'English'; // Note: Your backend expects 'English' instead of 'en'
+      case 'Malay':
+        return 'Malay'; // Note: Your backend expects 'Malay' instead of 'ms'
+      default:
+        return '';
     }
   }
 

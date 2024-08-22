@@ -10,18 +10,13 @@ class Essentials extends StatelessWidget {
     {
       'category': 'GREETING',
       'phrases': [
-        'Hello',
         'My name is ',
         'Excuse me',
-        'Goodbye',
-        'How are you?',
-        'Nice to meet you!',
       ],
     },
     {
       'category': 'BASICS',
       'phrases': [
-        'Please',
         'I\'m sorry.',
         'Thank you.',
       ],
@@ -29,32 +24,20 @@ class Essentials extends StatelessWidget {
     {
       'category': 'DIRECTIONS',
       'phrases': [
-        'Left',
-        'Right',
         'Straight ahead',
         'In ___ meters.',
-        'Traffic light',
-        'Stop sign',
-        'North',
-        'South',
-        'East',
-        'West',
       ],
     },
     {
       'category': 'MONEY',
       'phrases': [
         'Where is the ATM?',
-        'I want to exchange money.',
-        'What is the exchange fee?',
         'How much does it cost?',
       ],
     },
     {
       'category': 'GENERAL',
       'phrases': [
-        'Where is the toilet?',
-        'Where is the grocery store?',
         'This is an emergency!',
         'I need help.',
       ],
@@ -63,45 +46,24 @@ class Essentials extends StatelessWidget {
       'category': 'LANGUAGE',
       'phrases': [
         'Do you speak ___?',
-        'I don\'t speak ___.',
         'I don\'t understand.',
-        'I speak ___.',
       ],
     },
   ];
 
   final Map<String, String> translations = {
-    'Hello': 'Halo',
     'My name is ': 'Nama saya',
     'Excuse me': 'Maafkan saya',
-    'Goodbye': 'Selamat tinggal',
-    'How are you?': 'Apa khabar?',
-    'Nice to meet you!': 'Senang bertemu dengan anda!',
-    'Please': 'Tolong',
     'I\'m sorry.': 'Saya minta maaf.',
     'Thank you.': 'Terima kasih.',
-    'Left': 'Kiri',
-    'Right': 'Kanan',
     'Straight ahead': 'Terus ke hadapan',
     'In ___ meters.': 'Dalam ___ meter.',
-    'Traffic light': 'Lampu isyarat',
-    'Stop sign': 'Tanda berhenti',
-    'North': 'Utara',
-    'South': 'Selatan',
-    'East': 'Timur',
-    'West': 'Barat',
     'Where is the ATM?': 'Di mana ATM?',
-    'I want to exchange money.': 'Saya mahu menukar wang.',
-    'What is the exchange fee?': 'Berapakah yuran pertukaran?',
     'How much does it cost?': 'Berapa harganya?',
-    'Where is the toilet?': 'Di mana tandas?',
-    'Where is the grocery store?': 'Di mana kedai runcit?',
     'This is an emergency!': 'Ini adalah kecemasan!',
     'I need help.': 'Saya perlukan bantuan.',
     'Do you speak ___?': 'Adakah anda bercakap ___?',
-    'I don\'t speak ___.': 'Saya tidak bercakap ___.',
     'I don\'t understand.': 'Saya tidak faham.',
-    'I speak ___.': 'Saya bercakap ___.',
   };
 
 

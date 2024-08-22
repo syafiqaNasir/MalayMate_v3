@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
-import 'package:malaymate/View/signup_page.dart';
-
-import 'translatewithtext_page.dart';
+import 'package:malaymate/View/translatewithtext_page.dart';
 
 class StartScreen extends StatefulWidget {
   const StartScreen({super.key});
@@ -88,7 +86,7 @@ class _StartScreenState extends State<StartScreen> {
                     ),
                     child: ElevatedButton(onPressed: () {
                       Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => SignUpScreen()),
+                          MaterialPageRoute(builder: (context) => TranslateWithTextPage()),
                       );
                     },
                       style: ElevatedButton.styleFrom(

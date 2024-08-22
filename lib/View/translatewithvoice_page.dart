@@ -155,13 +155,13 @@ class _TranslateWithVoicePageState extends State<TranslateWithVoicePage> {
           unselectedItemColor: Colors.white,
           onTap: (index) => widget.homeController.onTabTapped(index, context),
           items: [
-            BottomNavigationBarItem(
-              icon: Padding(
-                padding: const EdgeInsets.only(bottom: 8.0), // Adjust padding
-                child: Icon(Icons.home, size: 30), // Increase icon size
-              ),
-              label: "Home",
-            ),
+            // BottomNavigationBarItem(
+            //   icon: Padding(
+            //     padding: const EdgeInsets.only(bottom: 8.0), // Adjust padding
+            //     child: Icon(Icons.home, size: 30), // Increase icon size
+            //   ),
+            //   label: "Home",
+            // ),
             BottomNavigationBarItem(
               icon: Padding(
                 padding: const EdgeInsets.only(bottom: 8.0),

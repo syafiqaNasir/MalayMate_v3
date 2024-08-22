@@ -65,7 +65,7 @@ class _TranslateWithTextPageState extends State<TranslateWithTextPage> {
         child: SafeArea(
           child: Column(
             children: [
-              SizedBox(height: 32,),
+              SizedBox(height: 10,),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
                 child: Row(
@@ -73,31 +73,31 @@ class _TranslateWithTextPageState extends State<TranslateWithTextPage> {
                   children: [
                     SizedBox(width: 10.0),
                     Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'Choose language: ',
-                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                            ),
-                            DropdownButton<String>(
-                              value: Provider.of<TranslationModel>(context).selectedLanguage,
-                              items: <String>['English to Malay', 'Malay to English'].map((String value) {
-                                return DropdownMenuItem<String>(
-                                  value: value,
-                                  child: Text(value),
-                                );
-                              }).toList(),
-                              onChanged: (String? newValue) {
-                                if (newValue != null) {
-                                  Provider.of<TranslationModel>(context, listen: false).setSelectedLanguage(newValue);
-                                  _onTextChanged();
-                                }
-                              },
-                            ),
-                          ],
-                        ),
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Choose language: ',
+                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
+                          DropdownButton<String>(
+                            value: Provider.of<TranslationModel>(context).selectedLanguage,
+                            items: <String>['English to Malay', 'Malay to English'].map((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value),
+                              );
+                            }).toList(),
+                            onChanged: (String? newValue) {
+                              if (newValue != null) {
+                                Provider.of<TranslationModel>(context, listen: false).setSelectedLanguage(newValue);
+                                _onTextChanged();
+                              }
+                            },
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -110,13 +110,108 @@ class _TranslateWithTextPageState extends State<TranslateWithTextPage> {
                       children: [
                         if (translationModel.selectedLanguage == 'English to Malay') ...[
                           inputBubble("English", englishInputController, translationModel, homeController),
-                          SizedBox(height: 20),
+                          SizedBox(height: 15),
                           translationBubble("Malay", translationModel.translatedText, homeController),
                         ] else ...[
                           inputBubble("Malay", malayInputController, translationModel, homeController),
                           SizedBox(height: 20),
                           translationBubble("English", translationModel.translatedText, homeController),
                         ],
+                        // Recent Translations Section
+                        SizedBox(height: 20),
+                        Divider(
+                          color: Colors.grey.shade400, // Color of the line, can be adjusted to match your theme
+                          thickness: 1.5, // Thickness of the line
+                          indent: 1, // Optional: adds space before the start of the line
+                          endIndent: 1, // Optional: adds space after the end of the line
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 1.0, horizontal: 10.0),
+                          child: Row(
+                            children: [
+                              Icon(Icons.history, color: Colors.blueAccent), // Add a small icon to the left
+                              SizedBox(width: 8), // Space between the icon and text
+                              Text(
+                                'Recent...',
+                                style: TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.blueAccent, // Matching color with the icon or theme
+                                  letterSpacing: 1.5, // Slightly increase letter spacing
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 10),
+                        Container(
+                          height: 150, // Set a fixed height for the ListView container
+                          child: ListView.builder(
+                            // Remove the shrinkWrap and NeverScrollableScrollPhysics properties
+                            itemCount: translationModel.recentTranslations.length,
+                            itemBuilder: (context, index) {
+                              return InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    if (translationModel.selectedLanguage == 'English to Malay') {
+                                      englishInputController.text = translationModel.recentTranslations[index];
+                                    } else {
+                                      malayInputController.text = translationModel.recentTranslations[index];
+                                    }
+                                    homeController.translateText(translationModel.recentTranslations[index]);
+                                  });
+                                },
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                                  margin: EdgeInsets.symmetric(vertical: 5, horizontal: 15),
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey.shade100,  // Use white background for a clean look
+                                    borderRadius: BorderRadius.circular(15),  // Rounded corners for softness
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.1),  // Subtle shadow for depth
+                                        spreadRadius: 2,
+                                        blurRadius: 5,
+                                        offset: Offset(0, 3),
+                                      ),
+                                    ],
+                                    border: Border.all(
+                                      color: Colors.blueAccent.withOpacity(0.3), // Light border to match the theme
+                                      width: 1,
+                                    ),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        padding: EdgeInsets.all(8),
+                                        decoration: BoxDecoration(
+                                          color: Colors.blueAccent.withOpacity(0.1),  // Light background circle for icon
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: Icon(
+                                          Icons.history,
+                                          color: Colors.blueAccent,
+                                          size: 20,
+                                        ),
+                                      ),
+                                      SizedBox(width: 15),
+                                      Expanded(
+                                        child: Text(
+                                          translationModel.recentTranslations[index],
+                                          style: GoogleFonts.poppins(
+                                            color: Colors.black87,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
                       ],
                     );
                   },
@@ -126,19 +221,20 @@ class _TranslateWithTextPageState extends State<TranslateWithTextPage> {
           ),
         ),
       ),
+
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.blue.shade500,
         selectedItemColor: Colors.white,
         unselectedItemColor: Colors.white,
         onTap: (index) => homeController.onTabTapped(index, context),
         items: [
-          BottomNavigationBarItem(
-            icon: Padding(
-              padding: const EdgeInsets.only(bottom: 8.0), // Adjust padding
-              child: Icon(Icons.home, size: 30), // Increase icon size
-            ),
-            label: "Home",
-          ),
+          // BottomNavigationBarItem(
+          //   icon: Padding(
+          //     padding: const EdgeInsets.only(bottom: 8.0), // Adjust padding
+          //     child: Icon(Icons.home, size: 30), // Increase icon size
+          //   ),
+          //   label: "Home",
+          // ),
           BottomNavigationBarItem(
             icon: Padding(
               padding: const EdgeInsets.only(bottom: 8.0),
@@ -248,68 +344,68 @@ class _TranslateWithTextPageState extends State<TranslateWithTextPage> {
 
   Widget translationBubble(String language, String initialText, HomeController homeController) {
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 8),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [Colors.blue[100]!, Colors.blue[100]!],
-        ),
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.5),
-            spreadRadius: 2,
-            blurRadius: 5,
-            offset: Offset(0, 3),
+        margin: const EdgeInsets.symmetric(vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [Colors.blue[100]!, Colors.blue[100]!],
           ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(language, style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold)),
-          SizedBox(height: 8),
-          TextField(
-            maxLines: null,
-            decoration: InputDecoration(
-              hintText: 'Translated text...',
-              hintStyle: TextStyle(fontSize: 20),
-              border: InputBorder.none,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.5),
+              spreadRadius: 2,
+              blurRadius: 5,
+              offset: Offset(0, 3),
             ),
-            style: TextStyle(fontSize: 20),
-            controller: TextEditingController(text: initialText),
-            readOnly: true,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
+          ],
+        ),
+        child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              IconButton(
-                icon: Icon(Icons.volume_up, color: Colors.black),
-                onPressed: () {
-                  if (initialText.isNotEmpty) homeController.speakText(initialText);
-                },
+              Text(language, style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold)),
+              SizedBox(height: 8),
+              TextField(
+                maxLines: null,
+                decoration: InputDecoration(
+                  hintText: 'Translated text...',
+                  hintStyle: TextStyle(fontSize: 20),
+                  border: InputBorder.none,
+                ),
+                style: TextStyle(fontSize: 20),
+                controller: TextEditingController(text: initialText),
+                readOnly: true,
               ),
-              IconButton(
-                icon: Icon(Icons.copy, color: Colors.black),
-                onPressed: () {
-                  if (initialText.isNotEmpty) {
-                    homeController.copyText(initialText);
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Copied to clipboard")));
-                  }
-                },
-              ),
-              IconButton(
-                icon: Icon(Icons.share, color: Colors.black),
-                onPressed: () {
-                  if (initialText.isNotEmpty) homeController.shareText(initialText);
-                },
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.volume_up, color: Colors.black),
+                    onPressed: () {
+                      if (initialText.isNotEmpty) homeController.speakText(initialText);
+                    },
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.copy, color: Colors.black),
+                    onPressed: () {
+                      if (initialText.isNotEmpty) {
+                        homeController.copyText(initialText);
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Copied to clipboard")));
+                      }
+                    },
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.share, color: Colors.black),
+                    onPressed: () {
+                      if (initialText.isNotEmpty) homeController.shareText(initialText);
+                    },
+                  ),
+                ],
               ),
             ],
-          ),
-        ],
-      ),
-    );
-  }
+            ),
+        );
+    }
 }

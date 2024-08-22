@@ -17,18 +17,15 @@ class HomeController {
   void onTabTapped(int index, BuildContext context) {
     switch (index) {
       case 0:
-        Navigator.push(context, MaterialPageRoute(builder: (context) => MainPage()));
-        break;
-      case 1:
         Navigator.push(context, MaterialPageRoute(builder: (context) => TranslateWithTextPage()));
         break;
-      case 2:
+      case 1:
         Navigator.push(context, MaterialPageRoute(builder: (context) => TranslateWithCameraPage(homeController: this,)));
         break;
-      case 3:
+      case 2:
         Navigator.push(context, MaterialPageRoute(builder: (context) => TranslateWithVoicePage(homeController: this)));
         break;
-      case 4:
+      case 3:
         Navigator.push(context, MaterialPageRoute(builder: (context) => PhrasebookScreen()));
         break;
     }
@@ -52,5 +49,15 @@ class HomeController {
 
   void shareText(String text) {
     utilityService.shareText(text);
+  }
+
+  // Additional method to handle recent translation selection (if needed)
+  void selectRecentTranslation(String text) {
+    if (translationModel.selectedLanguage == 'English to Malay') {
+      translationModel.englishInputController.text = text;
+    } else {
+      translationModel.malayInputController.text = text;
+    }
+    translateText(text);
   }
 }

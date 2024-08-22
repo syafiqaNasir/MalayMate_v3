@@ -93,13 +93,13 @@ class _PhrasebookScreenState extends State<PhrasebookScreen> {
         unselectedItemColor: Colors.white,
         onTap: (index) => homeController.onTabTapped(index, context),
         items: [
-          BottomNavigationBarItem(
-            icon: Padding(
-              padding: const EdgeInsets.only(bottom: 8.0), // Adjust padding
-              child: Icon(Icons.home, size: 30), // Increase icon size
-            ),
-            label: "Home",
-          ),
+          // BottomNavigationBarItem(
+          //   icon: Padding(
+          //     padding: const EdgeInsets.only(bottom: 8.0), // Adjust padding
+          //     child: Icon(Icons.home, size: 30), // Increase icon size
+          //   ),
+          //   label: "Home",
+          // ),
           BottomNavigationBarItem(
             icon: Padding(
               padding: const EdgeInsets.only(bottom: 8.0),

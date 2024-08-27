@@ -1,43 +1,30 @@
+// File: lib/screens/phrasebook_screen.dart
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:malaymate/Controller/phrasebook_controller.dart';
-import 'package:malaymate/Controller/translatewithtext_controller.dart';
 import 'package:malaymate/Model/translation_model.dart';
-import 'package:malaymate/View/Esssentials/essentials.dart';
-import 'package:malaymate/View/Esssentials/essentials_ganu.dart';
-import 'package:malaymate/View/Esssentials/essentials_kel.dart';
-import 'package:malaymate/View/Esssentials/essentials_negeri.dart';
-import 'package:malaymate/View/Esssentials/essentials_pahang.dart';
-import 'package:malaymate/View/Esssentials/essentials_perak.dart';
-import 'package:malaymate/View/Esssentials/essentials_sabah.dart';
-
-import 'Esssentials/essentials_johor.dart';
-import 'Esssentials/essentials_kedah.dart';
-import 'Esssentials/essentials_melaka.dart';
-import 'Esssentials/essentials_sarawak.dart';
+import 'situation_screen.dart';
+import 'package:malaymate/Controller/translatewithtext_controller.dart'; // Import HomeController
+import 'package:malaymate/Model/translations_data.dart';
 
 class PhrasebookScreen extends StatefulWidget {
-  const PhrasebookScreen({Key? key}) : super(key: key);
-
   @override
   _PhrasebookScreenState createState() => _PhrasebookScreenState();
 }
 
 class _PhrasebookScreenState extends State<PhrasebookScreen> {
   String selectedAccent = 'Standard Malay';
-  late HomeController homeController;
+  late HomeController homeController; // Declare homeController
 
   @override
   void initState() {
     super.initState();
     final TranslationModel translationModel = TranslationModel();
-    homeController = HomeController(translationModel);
+    homeController = HomeController(translationModel); // Initialize homeController
   }
 
   @override
   Widget build(BuildContext context) {
-    final PhrasebookController controller = PhrasebookController();
-
     return Scaffold(
       appBar: AppBar(
         title: Center(
@@ -54,38 +41,27 @@ class _PhrasebookScreenState extends State<PhrasebookScreen> {
         automaticallyImplyLeading: false,
         actions: [
           IconButton(
-            icon: Image.asset(
-              'assets/images/book.png',
-              height: 30,
-              width: 30,
-            ),
+            icon: Icon(Icons.language),
             onPressed: () {
               _showAccentSelectionDialog(context);
             },
           ),
         ],
       ),
-      body: ListView.builder(
-        itemCount: controller.categories.length,
-        itemBuilder: (context, index) {
-          final category = controller.categories[index];
+      body: ListView(
+        children: translationsData[selectedAccent]?.keys.map((situation) {
           return ListTile(
-            leading: Text(
-              category.icon,
-              style: const TextStyle(fontSize: 24),
-            ),
             title: Text(
-              category.name,
-              style: const TextStyle(color: Colors.black87, fontSize: 18),
+              _getTitleWithIcon(situation),
+              style: TextStyle(
+                fontSize: 18,
+              ),
             ),
             onTap: () {
-              if (category.name == 'Essentials') {
-                _navigateToEssentials(context);
-              }
-              // Add other cases for different categories if needed
+              _navigateToSituation(context, situation);
             },
           );
-        },
+        }).toList() ?? [],
       ),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.blue.shade500,
@@ -93,13 +69,6 @@ class _PhrasebookScreenState extends State<PhrasebookScreen> {
         unselectedItemColor: Colors.white,
         onTap: (index) => homeController.onTabTapped(index, context),
         items: [
-          // BottomNavigationBarItem(
-          //   icon: Padding(
-          //     padding: const EdgeInsets.only(bottom: 8.0), // Adjust padding
-          //     child: Icon(Icons.home, size: 30), // Increase icon size
-          //   ),
-          //   label: "Home",
-          // ),
           BottomNavigationBarItem(
             icon: Padding(
               padding: const EdgeInsets.only(bottom: 8.0),
@@ -138,6 +107,27 @@ class _PhrasebookScreenState extends State<PhrasebookScreen> {
     );
   }
 
+  String _getTitleWithIcon(String situation) {
+    switch (situation) {
+      case 'Essentials':
+        return '🌐   Essentials';
+      case 'While Traveling':
+        return '✈️    While Traveling';
+      case 'Help/Medical':
+        return '➕   Help/Medical';
+      case 'At the Hotel':
+        return '🏨   At the Hotel';
+      case 'At the Restaurant':
+        return '🍽️   At the Restaurant';
+      case 'At the Store':
+        return '🛒   At the Store';
+      case 'At Work':
+        return '💼   At Work';
+      default:
+        return situation;
+    }
+  }
+
   void _showAccentSelectionDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -150,118 +140,31 @@ class _PhrasebookScreenState extends State<PhrasebookScreen> {
               setState(() {
                 selectedAccent = newValue!;
               });
+              Navigator.of(context).pop();
             },
-            items: <String>['Standard Malay', 'Kelantan', 'Terengganu', 'Johor', 'Kedah', 'Melaka',
-              'Negeri', 'Pahang', 'Perak', 'Sabah', 'Sarawak' ]
-                .map<DropdownMenuItem<String>>((String value) {
+            items: translationsData.keys.map<DropdownMenuItem<String>>((String value) {
               return DropdownMenuItem<String>(
                 value: value,
                 child: Text(value),
               );
             }).toList(),
           ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text('OK'),
-            ),
-          ],
         );
       },
     );
   }
 
-  void _navigateToEssentials(BuildContext context) {
-    if (selectedAccent == 'Standard Malay') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => Essentials(homeController: homeController),
+  void _navigateToSituation(BuildContext context, String situation) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SituationScreen(
+          situation: situation,
+          accent: selectedAccent,
+          translationsData: translationsData,
+          homeController: homeController, // Pass the initialized HomeController
         ),
-      );
-    } else if (selectedAccent == 'Kelantan') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => EssentialsKelantan(homeController: homeController),
-        ),
-      );
-    }
-    else if (selectedAccent == 'Terengganu') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => TerengganuEssentials(homeController: homeController),
-        ),
-      );
-    }
-    else if (selectedAccent == 'Johor') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => JohorEssentials(homeController: homeController),
-        ),
-      );
-    }
-    else if (selectedAccent == 'Kedah') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => KedahEssentials(homeController: homeController),
-        ),
-      );
-    }
-    else if (selectedAccent == 'Melaka') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => MelakaEssentials(homeController: homeController),
-        ),
-      );
-    }
-    else if (selectedAccent == 'Negeri') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => NegeriEssentials(homeController: homeController),
-        ),
-      );
-    }
-    else if (selectedAccent == 'Pahang') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => PahangEssentials(homeController: homeController),
-        ),
-      );
-    }
-    else if (selectedAccent == 'Perak') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => PerakEssentials(homeController: homeController),
-        ),
-      );
-    }
-    else if (selectedAccent == 'Sabah') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => SabahEssentials(homeController: homeController),
-        ),
-      );
-    }
-    else if (selectedAccent == 'Sarawak') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => SarawakEssentials(homeController: homeController),
-        ),
-      );
-    }
+      ),
+    );
   }
 }

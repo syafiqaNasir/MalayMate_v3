@@ -10,18 +10,13 @@ class KedahEssentials extends StatelessWidget {
     {
       'category': 'GREETING',
       'phrases': [
-        'Hello',
         'My name is ',
         'Excuse me',
-        'Goodbye',
-        'How are you?',
-        'Nice to meet you!',
       ],
     },
     {
       'category': 'BASICS',
       'phrases': [
-        'Please',
         'I\'m sorry.',
         'Thank you.',
       ],
@@ -29,32 +24,20 @@ class KedahEssentials extends StatelessWidget {
     {
       'category': 'DIRECTIONS',
       'phrases': [
-        'Left',
-        'Right',
         'Straight ahead',
         'In ___ meters.',
-        'Traffic light',
-        'Stop sign',
-        'North',
-        'South',
-        'East',
-        'West',
       ],
     },
     {
       'category': 'MONEY',
       'phrases': [
         'Where is the ATM?',
-        'I want to exchange money.',
-        'What is the exchange fee?',
         'How much does it cost?',
       ],
     },
     {
       'category': 'GENERAL',
       'phrases': [
-        'Where is the toilet?',
-        'Where is the grocery store?',
         'This is an emergency!',
         'I need help.',
       ],
@@ -63,9 +46,7 @@ class KedahEssentials extends StatelessWidget {
       'category': 'LANGUAGE',
       'phrases': [
         'Do you speak ___?',
-        'I don\'t speak ___.',
         'I don\'t understand.',
-        'I speak ___.',
       ],
     },
   ];

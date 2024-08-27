@@ -14,6 +14,7 @@ class TranslateWithTextPage extends StatefulWidget {
 class _TranslateWithTextPageState extends State<TranslateWithTextPage> {
   late HomeController homeController;
   late FocusNode englishFocusNode;
+  late FocusNode malayFocusNode;
   late TextEditingController englishInputController;
   late TextEditingController malayInputController;
 
@@ -23,6 +24,7 @@ class _TranslateWithTextPageState extends State<TranslateWithTextPage> {
     final translationModel = Provider.of<TranslationModel>(context, listen: false);
     homeController = HomeController(translationModel);
     englishFocusNode = FocusNode();
+    malayFocusNode = FocusNode();
     englishInputController = TextEditingController();
     malayInputController = TextEditingController();
     englishInputController.addListener(_onTextChanged);
@@ -32,6 +34,7 @@ class _TranslateWithTextPageState extends State<TranslateWithTextPage> {
   @override
   void dispose() {
     englishFocusNode.dispose();
+    malayFocusNode.dispose();
     englishInputController.dispose();
     malayInputController.dispose();
     super.dispose();
@@ -39,6 +42,15 @@ class _TranslateWithTextPageState extends State<TranslateWithTextPage> {
 
   void _onTextChanged() {
     homeController.clearText();
+  }
+
+  void _translateText() {
+    final translationModel = Provider.of<TranslationModel>(context, listen: false);
+    if (translationModel.selectedLanguage == 'English to Malay') {
+      homeController.translateText(englishInputController.text);
+    } else {
+      homeController.translateText(malayInputController.text);
+    }
   }
 
   @override
@@ -58,166 +70,176 @@ class _TranslateWithTextPageState extends State<TranslateWithTextPage> {
         backgroundColor: Colors.grey.shade50,
         automaticallyImplyLeading: false,
       ),
-      body: Container(
-        decoration: BoxDecoration(
-          color: Colors.grey.shade50,
-        ),
-        child: SafeArea(
-          child: Column(
-            children: [
-              SizedBox(height: 10,),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(width: 10.0),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Choose language: ',
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                          ),
-                          DropdownButton<String>(
-                            value: Provider.of<TranslationModel>(context).selectedLanguage,
-                            items: <String>['English to Malay', 'Malay to English'].map((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }).toList(),
-                            onChanged: (String? newValue) {
-                              if (newValue != null) {
-                                Provider.of<TranslationModel>(context, listen: false).setSelectedLanguage(newValue);
-                                _onTextChanged();
-                              }
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Flexible(
-                child: Consumer<TranslationModel>(
-                  builder: (context, translationModel, child) {
-                    return ListView(
-                      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-                      children: [
-                        if (translationModel.selectedLanguage == 'English to Malay') ...[
-                          inputBubble("English", englishInputController, translationModel, homeController),
-                          SizedBox(height: 15),
-                          translationBubble("Malay", translationModel.translatedText, homeController),
-                        ] else ...[
-                          inputBubble("Malay", malayInputController, translationModel, homeController),
-                          SizedBox(height: 20),
-                          translationBubble("English", translationModel.translatedText, homeController),
-                        ],
-                        // Recent Translations Section
-                        SizedBox(height: 20),
-                        Divider(
-                          color: Colors.grey.shade400, // Color of the line, can be adjusted to match your theme
-                          thickness: 1.5, // Thickness of the line
-                          indent: 1, // Optional: adds space before the start of the line
-                          endIndent: 1, // Optional: adds space after the end of the line
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 1.0, horizontal: 10.0),
-                          child: Row(
-                            children: [
-                              Icon(Icons.history, color: Colors.blueAccent), // Add a small icon to the left
-                              SizedBox(width: 8), // Space between the icon and text
-                              Text(
-                                'Recent...',
-                                style: TextStyle(
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.blueAccent, // Matching color with the icon or theme
-                                  letterSpacing: 1.5, // Slightly increase letter spacing
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(height: 10),
-                        Container(
-                          height: 150, // Set a fixed height for the ListView container
-                          child: ListView.builder(
-                            // Remove the shrinkWrap and NeverScrollableScrollPhysics properties
-                            itemCount: translationModel.recentTranslations.length,
-                            itemBuilder: (context, index) {
-                              return InkWell(
-                                onTap: () {
+      body: GestureDetector(
+        onTap: () {
+          // Hide the keyboard when tapping outside of the TextField
+          FocusScope.of(context).unfocus();
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.grey.shade50,
+          ),
+          child: SafeArea(
+            child: Column(
+              children: [
+                SizedBox(height: 10,),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(width: 10.0),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Choose language: ',
+                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                            ),
+                            DropdownButton<String>(
+                              value: Provider.of<TranslationModel>(context).selectedLanguage,
+                              items: <String>['English to Malay', 'Malay to English'].map((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
+                              onChanged: (String? newValue) {
+                                if (newValue != null) {
+                                  Provider.of<TranslationModel>(context, listen: false).setSelectedLanguage(newValue);
                                   setState(() {
-                                    if (translationModel.selectedLanguage == 'English to Malay') {
-                                      englishInputController.text = translationModel.recentTranslations[index];
-                                    } else {
-                                      malayInputController.text = translationModel.recentTranslations[index];
-                                    }
-                                    homeController.translateText(translationModel.recentTranslations[index]);
+                                    // Immediately clear text controllers on language change
+                                    englishInputController.clear();
+                                    malayInputController.clear();
                                   });
-                                },
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-                                  margin: EdgeInsets.symmetric(vertical: 5, horizontal: 15),
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey.shade100,  // Use white background for a clean look
-                                    borderRadius: BorderRadius.circular(15),  // Rounded corners for softness
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black.withOpacity(0.1),  // Subtle shadow for depth
-                                        spreadRadius: 2,
-                                        blurRadius: 5,
-                                        offset: Offset(0, 3),
-                                      ),
-                                    ],
-                                    border: Border.all(
-                                      color: Colors.blueAccent.withOpacity(0.3), // Light border to match the theme
-                                      width: 1,
-                                    ),
+                                }
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Flexible(
+                  child: Consumer<TranslationModel>(
+                    builder: (context, translationModel, child) {
+                      return ListView(
+                        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+                        children: [
+                          if (translationModel.selectedLanguage == 'English to Malay') ...[
+                            inputBubble("English", englishInputController, translationModel, homeController),
+                            SizedBox(height: 15),
+                            translationBubble("Malay", translationModel.translatedText, homeController),
+                          ] else ...[
+                            inputBubble("Malay", malayInputController, translationModel, homeController),
+                            SizedBox(height: 20),
+                            translationBubble("English", translationModel.translatedText, homeController),
+                          ],
+                          // Recent Translations Section
+                          SizedBox(height: 20),
+                          Divider(
+                            color: Colors.grey.shade400, // Color of the line, can be adjusted to match your theme
+                            thickness: 1.5, // Thickness of the line
+                            indent: 1, // Optional: adds space before the start of the line
+                            endIndent: 1, // Optional: adds space after the end of the line
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 1.0, horizontal: 10.0),
+                            child: Row(
+                              children: [
+                                Icon(Icons.history, color: Colors.blueAccent), // Add a small icon to the left
+                                SizedBox(width: 8), // Space between the icon and text
+                                Text(
+                                  'Recent...',
+                                  style: TextStyle(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.blueAccent, // Matching color with the icon or theme
+                                    letterSpacing: 1.5, // Slightly increase letter spacing
                                   ),
-                                  child: Row(
-                                    children: [
-                                      Container(
-                                        padding: EdgeInsets.all(8),
-                                        decoration: BoxDecoration(
-                                          color: Colors.blueAccent.withOpacity(0.1),  // Light background circle for icon
-                                          shape: BoxShape.circle,
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          Container(
+                            height: 150, // Set a fixed height for the ListView container
+                            child: ListView.builder(
+                              // Remove the shrinkWrap and NeverScrollableScrollPhysics properties
+                              itemCount: translationModel.recentTranslations.length,
+                              itemBuilder: (context, index) {
+                                return InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      if (translationModel.selectedLanguage == 'English to Malay') {
+                                        englishInputController.text = translationModel.recentTranslations[index];
+                                      } else {
+                                        malayInputController.text = translationModel.recentTranslations[index];
+                                      }
+                                      homeController.translateText(translationModel.recentTranslations[index]);
+                                    });
+                                  },
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                                    margin: EdgeInsets.symmetric(vertical: 5, horizontal: 15),
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey.shade100,  // Use white background for a clean look
+                                      borderRadius: BorderRadius.circular(15),  // Rounded corners for softness
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(0.1),  // Subtle shadow for depth
+                                          spreadRadius: 2,
+                                          blurRadius: 5,
+                                          offset: Offset(0, 3),
                                         ),
-                                        child: Icon(
-                                          Icons.history,
-                                          color: Colors.blueAccent,
-                                          size: 20,
-                                        ),
+                                      ],
+                                      border: Border.all(
+                                        color: Colors.blueAccent.withOpacity(0.3), // Light border to match the theme
+                                        width: 1,
                                       ),
-                                      SizedBox(width: 15),
-                                      Expanded(
-                                        child: Text(
-                                          translationModel.recentTranslations[index],
-                                          style: GoogleFonts.poppins(
-                                            color: Colors.black87,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w500,
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          padding: EdgeInsets.all(8),
+                                          decoration: BoxDecoration(
+                                            color: Colors.blueAccent.withOpacity(0.1),  // Light background circle for icon
+                                            shape: BoxShape.circle,
+                                          ),
+                                          child: Icon(
+                                            Icons.history,
+                                            color: Colors.blueAccent,
+                                            size: 20,
                                           ),
                                         ),
-                                      ),
-                                    ],
+                                        SizedBox(width: 15),
+                                        Expanded(
+                                          child: Text(
+                                            translationModel.recentTranslations[index],
+                                            style: GoogleFonts.poppins(
+                                              color: Colors.black87,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              );
-                            },
+                                );
+                              },
+                            ),
                           ),
-                        ),
-                      ],
-                    );
-                  },
+                        ],
+                      );
+                    },
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -326,7 +348,10 @@ class _TranslateWithTextPageState extends State<TranslateWithTextPage> {
                 ),
               ),
               OutlinedButton(
-                onPressed: () => homeController.translateText(controller.text),
+                onPressed: () {
+                // Call the translate function when the button is clicked
+                _translateText();
+                },
                 child: Text(
                   'Translate',
                   style: TextStyle(color: Colors.black87),

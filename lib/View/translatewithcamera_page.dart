@@ -184,7 +184,7 @@ class _TranslateWithCameraPageState extends State<TranslateWithCameraPage> {
                   TextField(
                     controller: TextEditingController(text: translatedResult.isNotEmpty ? translatedResult : null),
                     decoration: const InputDecoration(
-                      hintText: 'Translated text will appear here...',
+                      hintText: 'Translated text...',
                       border: InputBorder.none,
                     ),
                     style: const TextStyle(fontSize: 20, color: Colors.black),

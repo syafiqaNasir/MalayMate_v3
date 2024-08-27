@@ -7,7 +7,6 @@ import 'package:malaymate/View/translatewithvoice_page.dart';
 import 'package:malaymate/View/translatewithcamera_page.dart';
 import 'package:malaymate/View/phrasebook_page.dart';
 
-
 class HomeController {
   final TranslationModel translationModel;
   final UtilityService utilityService = UtilityService();
